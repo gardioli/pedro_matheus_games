@@ -1,0 +1,1 @@
+Pode usar compoenentes de C:\Desenvolvimento\toolbox para remover fundo de imagem
