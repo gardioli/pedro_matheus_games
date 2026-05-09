@@ -10,8 +10,9 @@ const restartBtn = document.getElementById('restartBtn');
 
 // Configurações do Jogo
 let gameActive = false;
+let rafId = null; // ID do requestAnimationFrame para evitar loops duplos
 let score = 0;
-let highScore = localStorage.getItem('dinoHighScore') || 0;
+let highScore = parseInt(localStorage.getItem('dinoHighScore')) || 0;
 let speed = 6;
 let frameCount = 0;
 
@@ -40,8 +41,7 @@ const dino = {
     gravity: 0.7,
     grounded: false,
     isCrouching: false,
-    color: '#2dd4bf',
-    animationFrame: 0
+    color: '#2dd4bf'
 };
 
 let obstacles = [];
@@ -55,7 +55,10 @@ function resize() {
 }
 
 function resetDinoPosition() {
+    dino.height = dino.baseHeight;
+    dino.width = dino.baseWidth;
     dino.y = canvas.height - dino.height - 20;
+    dino.grounded = true;
 }
 
 window.addEventListener('resize', resize);
@@ -73,6 +76,10 @@ window.addEventListener('keydown', (e) => {
         dino.grounded = false;
         dino.isCrouching = false;
     }
+    // Prevenir scroll da página com teclas do jogo
+    if (['Space', 'ArrowUp', 'ArrowDown'].includes(e.code) && gameActive) {
+        e.preventDefault();
+    }
 });
 
 window.addEventListener('keyup', (e) => {
@@ -82,13 +89,16 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
-// Suporte para mobile/clique (apenas pulo)
+// Suporte para mobile/toque
 canvas.addEventListener('touchstart', (e) => {
-    if (dino.grounded && gameActive) {
+    e.preventDefault();
+    if (!gameActive) return;
+    if (dino.grounded) {
         dino.dy = -dino.jumpForce;
         dino.grounded = false;
+        dino.isCrouching = false;
     }
-});
+}, { passive: false });
 
 // Loop do Jogo
 function update() {
@@ -96,10 +106,10 @@ function update() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Ajustar altura conforme agachamento
+    // Ajustar dimensões conforme agachamento
     if (dino.isCrouching && dino.grounded) {
         dino.height = dino.baseHeight * 0.6;
-        dino.width = dino.baseWidth * 1.2; // Alarga um pouco ao agachar
+        dino.width = dino.baseWidth * 1.2;
     } else {
         dino.height = dino.baseHeight;
         dino.width = dino.baseWidth;
@@ -110,10 +120,12 @@ function update() {
     dino.y += dino.dy;
 
     const groundY = canvas.height - dino.height - 20;
-    if (dino.y > groundY) {
+    if (dino.y >= groundY) {
         dino.y = groundY;
         dino.dy = 0;
         dino.grounded = true;
+    } else {
+        dino.grounded = false;
     }
 
     // Chão
@@ -132,12 +144,11 @@ function update() {
 
     // Desenhar Dino
     ctx.save();
-    if (dinoImg.complete) {
-        // Efeito de animação: inclinação leve ao correr
+    if (dinoImg.complete && dinoImg.naturalWidth > 0) {
         if (dino.grounded && !dino.isCrouching) {
-            ctx.translate(dino.x + dino.width/2, dino.y + dino.height/2 + runOffset);
+            ctx.translate(dino.x + dino.width / 2, dino.y + dino.height / 2 + runOffset);
             ctx.rotate(Math.sin(frameCount * 0.2) * 0.05);
-            ctx.drawImage(dinoImg, -dino.width/2, -dino.height/2, dino.width, dino.height);
+            ctx.drawImage(dinoImg, -dino.width / 2, -dino.height / 2, dino.width, dino.height);
         } else {
             ctx.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
         }
@@ -149,76 +160,96 @@ function update() {
     }
     ctx.restore();
 
-    // Gerar Obstáculos
-    if (frameCount % Math.max(60, 140 - Math.floor(speed * 3)) === 0) {
-        const isFlying = Math.random() > 0.7; // 30% de chance de ser um dinossauro voador
+    // Gerar Obstáculos - Frequência aumenta com a velocidade e pontuação
+    const spawnInterval = Math.max(40, 130 - Math.floor(speed * 4) - Math.floor(score / 400));
+    if (frameCount > 0 && frameCount % spawnInterval === 0) {
+        const isFlying = Math.random() > 0.7;
         if (isFlying) {
             obstacles.push({
                 type: 'pterodactyl',
                 x: canvas.width,
-                y: canvas.height - 110 - (Math.random() * 40), // Altura variável para forçar agachamento ou pulo
+                y: canvas.height - 110 - Math.random() * 40,
                 width: 60,
                 height: 40,
                 speed: speed * 1.2
             });
         } else {
+            const obsWidth = 30 + Math.random() * 20;
+            const obsHeight = 50;
             obstacles.push({
                 type: 'cactus',
                 x: canvas.width,
-                y: canvas.height - 70,
-                width: 30 + Math.random() * 20,
-                height: 50,
+                y: canvas.height - obsHeight - 20,
+                width: obsWidth,
+                height: obsHeight,
                 speed: speed
             });
         }
     }
 
-    // Atualizar Obstáculos
+    // Atualizar e Desenhar Obstáculos
+    let collided = false;
     for (let i = obstacles.length - 1; i >= 0; i--) {
         const obs = obstacles[i];
         obs.x -= obs.speed;
 
+        // Calcular offset de animação do pterodáctilo (usado tanto para desenho quanto para colisão)
+        let obsDrawY = obs.y;
+        if (obs.type === 'pterodactyl') {
+            obsDrawY = obs.y + Math.sin(frameCount * 0.3) * 5;
+        }
+
         // Desenhar Obstáculo
         if (obs.type === 'cactus') {
-            if (cactusImg.complete) {
+            if (cactusImg.complete && cactusImg.naturalWidth > 0) {
                 ctx.drawImage(cactusImg, obs.x, obs.y, obs.width, obs.height);
             } else {
                 ctx.fillStyle = '#f43f5e';
                 ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
             }
         } else {
-            // Pterodáctilo com animação de bater asas
-            const wingFlap = Math.sin(frameCount * 0.3) * 5;
-            if (pterodactylImg.complete) {
-                ctx.drawImage(pterodactylImg, obs.x, obs.y + wingFlap, obs.width, obs.height);
+            if (pterodactylImg.complete && pterodactylImg.naturalWidth > 0) {
+                ctx.drawImage(pterodactylImg, obs.x, obsDrawY, obs.width, obs.height);
             } else {
                 ctx.fillStyle = '#fbbf24';
-                ctx.fillRect(obs.x, obs.y + wingFlap, obs.width, obs.height);
+                ctx.fillRect(obs.x, obsDrawY, obs.width, obs.height);
             }
         }
 
-        // Colisão (Ajustada para ser mais justa)
+        // Colisão (hitbox reduzida para ser mais justa, usando posição real de desenho)
         const hitPadding = 10;
+        const obsHitY = (obs.type === 'pterodactyl') ? obsDrawY : obs.y;
         if (
+            !collided &&
             dino.x + hitPadding < obs.x + obs.width - hitPadding &&
             dino.x + dino.width - hitPadding > obs.x + hitPadding &&
-            dino.y + hitPadding < obs.y + obs.height - hitPadding &&
-            dino.y + dino.height - hitPadding > obs.y + hitPadding
+            dino.y + hitPadding < obsHitY + obs.height - hitPadding &&
+            dino.y + dino.height - hitPadding > obsHitY + hitPadding
         ) {
-            endGame();
+            collided = true;
         }
 
         // Remover obstáculos fora da tela
         if (obs.x + obs.width < 0) {
             obstacles.splice(i, 1);
-            score++;
-            updateScore();
         }
     }
 
+    if (collided) {
+        endGame();
+        return;
+    }
+
+    // Pontuação baseada em frames (mais fluida)
     frameCount++;
-    speed += 0.0015;
-    requestAnimationFrame(update);
+    // Aceleração progressiva baseada na pontuação
+    speed += 0.002 + (score / 15000);
+    if (frameCount % 6 === 0) {
+        score++;
+        updateScore();
+    }
+
+    rafId = requestAnimationFrame(update);
 }
 
 function updateScore() {
@@ -231,6 +262,12 @@ function updateScore() {
 }
 
 function startGame() {
+    // Cancelar loop anterior para evitar loops duplos
+    if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+    }
+
     gameActive = true;
     score = 0;
     speed = 6;
@@ -242,11 +279,15 @@ function startGame() {
     updateScore();
     startScreen.classList.add('hidden');
     gameOverScreen.classList.add('hidden');
-    requestAnimationFrame(update);
+    rafId = requestAnimationFrame(update);
 }
 
 function endGame() {
     gameActive = false;
+    if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+    }
     finalScoreElement.textContent = score;
     gameOverScreen.classList.remove('hidden');
 }
