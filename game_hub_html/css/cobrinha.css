@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg-dark:        #020e0d;
+    --bg-card:        #091c1b;
+    --border-color:   #174440;
+    --accent-color:   #2dd4bf;
+    --accent-dark:    #14b8a6;
+    --glow:           rgba(45, 212, 191, 0.3);
+    --text-primary:   #dff7f5;
+    --text-secondary: #4d9994;
+    --snake-head:     #2dd4bf;
+    --snake-body:     #14b8a6;
+    --food-color:     #fb923c;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(ellipse 70% 55% at 10% 0%,   rgba(45, 212, 191, 0.07) 0%, transparent 100%),
+        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(20, 184, 166, 0.05) 0%, transparent 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 1.5rem;
+    gap: 1.5rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.back-link:hover { color: var(--accent-color); }
+
+.game-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.stats-container {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+canvas {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 1rem;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5), 0 0 20px var(--glow);
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.controls-hint {
+    position: absolute;
+    bottom: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    background: rgba(0,0,0,0.4);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    backdrop-filter: blur(4px);
+}
+
+.game-over-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 14, 13, 0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    z-index: 10;
+    border-radius: 1rem;
+}
+
+.game-over-overlay.active { display: flex; }
+
+.game-over-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ef4444;
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+.btn-restart {
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-dark) 100%);
+    border: none;
+    color: #020e0d;
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 20px var(--glow);
+}
+
+.btn-restart:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--glow);
+}

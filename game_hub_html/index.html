@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Jogos - Premium Arcade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/hub.css">
+    <style>
+        @media (max-width: 640px) {
+            h1 { font-size: 2.5rem; }
+            .container { padding: 2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Minha Galeria</h1>
+            <p>Escolha um jogo e divirta-se. Mais jogos em breve!</p>
+        </header>
+
+        <div class="game-grid">
+            <a href="games/jogo-da-velha.html" class="game-card">
+                <span class="badge">Disponível</span>
+                <div class="game-icon"><i class="fa-solid fa-table-cells"></i></div>
+                <div class="game-title">Jogo da Velha</div>
+                <div class="game-desc">Clássico jogo de estratégia para dois jogadores ou contra a CPU inteligente.</div>
+            </a>
+
+            <a href="games/cobrinha.html" class="game-card">
+                <span class="badge">Disponível</span>
+                <div class="game-icon" style="color: var(--primary);"><i class="fa-solid fa-snake"></i></div>
+                <div class="game-title">Snake Game</div>
+                <div class="game-desc">O clássico jogo da cobrinha com gráficos modernos e neon vibrante.</div>
+            </a>
+
+            <div class="game-card" style="opacity: 0.5; cursor: not-allowed;">
+                <span class="badge" style="background: #3f3f46; color: #a1a1aa;">Em breve</span>
+                <div class="game-icon" style="color: #3f3f46;"><i class="fa-solid fa-ghost"></i></div>
+                <div class="game-title">Pac-Man</div>
+                <div class="game-desc">Fuja dos fantasmas e coma todas as pastilhas neste arcade lendário.</div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Arcade Hub. Criado com Antigravity.
+    </footer>
+</body>
+</html>

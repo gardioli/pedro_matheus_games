@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game - Premium Arcade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/cobrinha.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header class="header">
+            <div style="display: flex; align-items: center; gap: 2rem;">
+                <a href="../index.html" class="back-link">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar ao Hub
+                </a>
+                <h1 class="game-title">Snake Game</h1>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-label">Score</div>
+                    <div id="score" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">High Score</div>
+                    <div id="highScore" class="stat-value">0</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <canvas id="snakeGame" width="600" height="600"></canvas>
+            
+            <div class="controls-hint">
+                <i class="fa-solid fa-keyboard"></i> Use as setas do teclado para jogar
+            </div>
+
+            <div id="gameOverOverlay" class="game-over-overlay">
+                <div class="game-over-title">GAME OVER</div>
+                <div style="font-size: 1.5rem; color: var(--text-secondary);">
+                    Sua pontuação: <span id="finalScore" style="color: var(--accent-color); font-weight: 700;">0</span>
+                </div>
+                <button onclick="restartGame()" class="btn-restart">
+                    Jogar Novamente
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/cobrinha.js"></script>
+</body>
+</html>

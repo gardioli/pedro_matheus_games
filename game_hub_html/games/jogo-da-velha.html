@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha - Hub de Jogos</title>
+    <link rel="stylesheet" href="../css/jogo-da-velha.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ── Page shell ──────────────────────────── */
+        body { min-height: 100vh; }
+
+        .page-wrapper {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            min-height: 100vh;
+            width: 100%;
+            padding: 1.5rem 2.5rem;
+            gap: 1.25rem;
+            box-sizing: border-box;
+        }
+
+        /* ── Top bar ─────────────────────────────── */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* ── Back link ───────────────────────────── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+        .back-link:hover { color: var(--accent-color); }
+
+        /* ── Score board ─────────────────────────── */
+        .score-board {
+            background: var(--bg-card);
+            padding: 0.65rem 1.5rem;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .score-item { text-align: center; }
+        .score-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            line-height: 1.1;
+        }
+
+        /* ── Main two-column layout ──────────────── */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* ── Left panel ──────────────────────────── */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: sticky;
+            top: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+        }
+
+        /* ── Status bar ──────────────────────────── */
+        #status {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: inset 0 1px 0 rgba(45, 212, 191, 0.05), 0 2px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.01em;
+        }
+
+        /* ── Mode selector ───────────────────────── */
+        .mode-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* ── Buttons ─────────────────────────────── */
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            justify-content: center;
+        }
+        .btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: 0 0 14px var(--glow);
+            transform: translateY(-1px);
+        }
+        .btn.active {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-dark) 100%);
+            border-color: transparent;
+            color: #020e0d;
+            box-shadow: 0 0 18px var(--glow), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* ── Divider ─────────────────────────────── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 0.25rem 0;
+        }
+
+        /* ── Right panel: board ──────────────────── */
+        .board-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 0;
+        }
+
+        .grid-container {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow:
+                0 0 0 1px rgba(45, 212, 191, 0.04),
+                0 24px 64px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(45, 212, 191, 0.07);
+            width: 100%;
+            max-width: min(calc(100vh - 10rem), 100%);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- Top bar -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <a href="../index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Hub</a>
+                <h1 class="panel-title"><i class="fa-solid fa-gamepad" style="color: var(--accent-color); font-size: 0.85em;"></i> Jogo da Velha</h1>
+            </div>
+            <div class="score-board">
+                <div class="score-item">
+                    <div style="color: var(--x-color);"><span id="iconX" class="score-char"></span><span id="labelX">Mario</span></div>
+                    <div id="scoreX" class="score-val">0</div>
+                </div>
+                <div style="color: var(--border-color); font-size: 1.5rem; line-height: 1;">|</div>
+                <div class="score-item">
+                    <div style="color: var(--o-color);"><span id="iconO" class="score-char"></span><span id="labelO">Luigi</span></div>
+                    <div id="scoreO" class="score-val">0</div>
+                </div>
+                <div style="color: var(--border-color); font-size: 1.5rem; line-height: 1;">|</div>
+                <div class="score-item">
+                    <div style="color: #f59e0b;">Empates</div>
+                    <div id="scoreDraw" class="score-val">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main layout -->
+        <div class="main-layout">
+
+            <!-- Left: controls -->
+            <div class="left-panel">
+                <div id="status">Vez do <span id="turnLabel" style="color: var(--x-color); font-weight: bold;">Mario</span></div>
+
+                <hr class="divider">
+
+                <div class="mode-selector">
+                    <button onclick="setMode(false)" id="btn2p" class="btn active">
+                        <i class="fa-solid fa-users"></i> 2 Jogadores
+                    </button>
+                    <button onclick="setMode(true)" id="btnAI" class="btn">
+                        <i class="fa-solid fa-robot"></i> Computador
+                    </button>
+                </div>
+
+                <div id="difficulty-selector" class="difficulty-selector">
+                    <button onclick="setDifficulty('facil')" id="btnFacil" class="btn">Fácil</button>
+                    <button onclick="setDifficulty('medio')" id="btnMedio" class="btn active">Médio</button>
+                    <button onclick="setDifficulty('dificil')" id="btnDificil" class="btn">Difícil</button>
+                </div>
+
+                <hr class="divider">
+
+                <div class="actions">
+                    <button onclick="resetGame()" class="btn">
+                        <i class="fa-solid fa-redo"></i> Reiniciar
+                    </button>
+                    <button onclick="resetScores()" class="btn">
+                        <i class="fa-solid fa-trash"></i> Limpar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: board -->
+            <div class="board-panel">
+                <div id="game-theme-container" class="grid-container theme-mario-luigi">
+                    <div id="board" class="grid"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="../js/jogo-da-velha.js"></script>
+</body>
+</html>
