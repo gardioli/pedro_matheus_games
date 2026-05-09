@@ -108,6 +108,16 @@ header p {
     margin-bottom: 1.5rem;
     color: var(--primary);
     transition: transform 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-icon img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 1rem;
 }
 
 .game-card:hover .game-icon {
