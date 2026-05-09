@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Run - Premium Arcade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/hub.css">
+    <link rel="stylesheet" href="../css/dino.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header-controls">
+            <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Voltar</a>
+            <div class="score-board">
+                <div class="score-item">SCORE: <span id="score">00000</span></div>
+                <div class="score-item high-score">HI: <span id="highScore">00000</span></div>
+            </div>
+        </div>
+
+        <div class="game-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            
+            <div id="startScreen" class="overlay">
+                <div class="overlay-content">
+                    <div class="dino-preview"><img src="../assets/dino.png" alt="Dino"></div>
+                    <h2>Dino Run</h2>
+                    <p>Pressione <span>ESPAÇO</span> ou <span>CLIQUE</span> para pular</p>
+                    <button id="startBtn" class="primary-btn">INICIAR JOGO</button>
+                </div>
+            </div>
+
+            <div id="gameOverScreen" class="overlay hidden">
+                <div class="overlay-content">
+                    <h1>GAME OVER</h1>
+                    <p>Sua pontuação final: <span id="finalScore">0</span></p>
+                    <button id="restartBtn" class="primary-btn">TENTAR NOVAMENTE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/dino.js"></script>
+</body>
+</html>
