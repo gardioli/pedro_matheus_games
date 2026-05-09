@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Bigodon - O Burrito Perdido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/hub.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 1rem;
+        }
+
+        .back-btn {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+        .back-btn:hover { color: var(--primary); }
+
+        .game-stats {
+            display: flex;
+            gap: 2rem;
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+        #bossHpDisplay { color: #f43f5e; }
+        #scoreDisplay  { color: var(--primary); }
+
+        #gameCanvas {
+            border: 3px solid var(--primary);
+            border-radius: 1rem;
+            box-shadow: 0 0 40px rgba(45,212,191,0.3);
+            display: block;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .controls-hint {
+            margin-top: 0.75rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .controls-hint span { color: var(--primary); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="header-controls">
+        <a href="../index.html" class="back-btn">&#8592; Voltar</a>
+        <div class="game-stats">
+            <div>BOSS HP: <span id="bossHpDisplay">20</span></div>
+            <div>SCORE: <span id="scoreDisplay">0</span></div>
+        </div>
+    </div>
+
+    <canvas id="gameCanvas" width="900" height="500"></canvas>
+
+    <div class="controls-hint">
+        <span>A/D</span> ou <span>←/→</span> para mover &nbsp;|&nbsp;
+        <span>W</span> ou <span>↑</span> para pular &nbsp;|&nbsp;
+        <span>ESPAÇO</span> para atirar tacos
+    </div>
+
+    <script src="../js/bigodon.js"></script>
+</body>
+</html>
