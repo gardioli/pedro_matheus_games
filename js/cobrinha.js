@@ -12,17 +12,19 @@ let food = { x: 5, y: 5 };
 let dx = 0;
 let dy = 0;
 let score = 0;
-let highScore = localStorage.getItem('snakeHighScore') || 0;
+let highScore = parseInt(localStorage.getItem('snakeHighScore')) || 0;
 let gameSpeed = 100; // ms
 let lastTime = 0;
-let gameRunning = true;
+let gameRunning = false;
+let rafId = null;
+let nextDirection = { dx: 0, dy: 0 };
+let currentDirection = { dx: 0, dy: 0 };
 
 highScoreEl.textContent = highScore;
 
 function init() {
     tileCount = canvas.width / gridSize;
     resetGame();
-    requestAnimationFrame(gameLoop);
 }
 
 function resetGame() {
@@ -30,10 +32,16 @@ function resetGame() {
     generateFood();
     dx = 0;
     dy = 0;
+    nextDirection = { dx: 0, dy: 0 };
+    currentDirection = { dx: 0, dy: 0 };
     score = 0;
     updateScore();
     gameRunning = true;
     gameOverOverlay.classList.remove('active');
+    
+    if (rafId) cancelAnimationFrame(rafId);
+    lastTime = performance.now();
+    rafId = requestAnimationFrame(gameLoop);
 }
 
 function generateFood() {
@@ -60,6 +68,11 @@ function gameLoop(timestamp) {
 }
 
 function update() {
+    // Apply buffered direction
+    dx = nextDirection.dx;
+    dy = nextDirection.dy;
+    currentDirection = { dx, dy };
+
     if (dx === 0 && dy === 0) return;
 
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
@@ -123,13 +136,18 @@ function draw() {
         }
 
         // Rounded segments
+        // Compatibility-friendly rounded segments
         const r = 4;
         const x = segment.x * gridSize + 2;
         const y = segment.y * gridSize + 2;
         const s = gridSize - 4;
         
         ctx.beginPath();
-        ctx.roundRect(x, y, s, s, r);
+        if (ctx.roundRect) {
+            ctx.roundRect(x, y, s, s, r);
+        } else {
+            ctx.rect(x, y, s, s);
+        }
         ctx.fill();
         ctx.shadowBlur = 0;
     });
@@ -146,27 +164,30 @@ function updateScore() {
 
 function gameOver() {
     gameRunning = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
     finalScoreEl.textContent = score;
     gameOverOverlay.classList.add('active');
 }
 
 window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') restartGame();
     switch (e.key) {
         case 'ArrowUp':
-            if (dy === 1) break;
-            dx = 0; dy = -1;
+            if (currentDirection.dy === 1) break;
+            nextDirection = { dx: 0, dy: -1 };
             break;
         case 'ArrowDown':
-            if (dy === -1) break;
-            dx = 0; dy = 1;
+            if (currentDirection.dy === -1) break;
+            nextDirection = { dx: 0, dy: 1 };
             break;
         case 'ArrowLeft':
-            if (dx === 1) break;
-            dx = -1; dy = 0;
+            if (currentDirection.dx === 1) break;
+            nextDirection = { dx: -1, dy: 0 };
             break;
         case 'ArrowRight':
-            if (dx === -1) break;
-            dx = 1; dy = 0;
+            if (currentDirection.dx === -1) break;
+            nextDirection = { dx: 1, dy: 0 };
             break;
     }
 });
@@ -174,7 +195,6 @@ window.addEventListener('keydown', e => {
 function restartGame() {
     gameSpeed = 100;
     resetGame();
-    requestAnimationFrame(gameLoop);
 }
 
 // Start

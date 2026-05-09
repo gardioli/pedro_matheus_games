@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Ultra - Premium Arcade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/hub.css">
+    <link rel="stylesheet" href="../css/tetris.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header-controls">
+            <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Voltar ao Hub</a>
+            <div class="game-logo" style="font-weight: 800; font-size: 1.5rem; letter-spacing: 0.2em;">TETRIS <span style="color: var(--primary-neon);">ULTRA</span></div>
+        </div>
+
+        <div class="main-layout">
+            <div class="game-area">
+                <canvas id="tetrisCanvas" width="350" height="700"></canvas>
+                
+                <div id="startScreen" class="overlay">
+                    <h1>TETRIS</h1>
+                    <p style="margin-bottom: 2rem; color: #71717a;">Desafio Geométrico Infinito</p>
+                    <button id="startBtn" class="primary-btn">Iniciar Jogo</button>
+                </div>
+
+                <div id="gameOverScreen" class="overlay hidden">
+                    <h1 style="background: linear-gradient(135deg, #fff 0%, #ef4444 100%); -webkit-background-clip: text;">GAME OVER</h1>
+                    <p style="margin-bottom: 2rem; color: #a1a1aa;">Pontuação Final: <span id="finalScore" style="color: #fff; font-weight: 800;">0</span></p>
+                    <button id="restartBtn" class="primary-btn">Tentar Novamente</button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="info-box">
+                    <div class="info-label">Próxima</div>
+                    <div class="next-piece-box">
+                        <canvas id="nextCanvas" width="100" height="100"></canvas>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Score</div>
+                    <div id="score" class="info-value">0</div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Nível</div>
+                    <div id="level" class="info-value">1</div>
+                </div>
+
+                <div class="controls-hint">
+                    <div class="info-label" style="margin-bottom: 1rem;">Controles</div>
+                    <p>Mover <span class="key">←</span> <span class="key">→</span></p>
+                    <p>Girar <span class="key">↑</span> ou <span class="key">X</span></p>
+                    <p>Cair rápido <span class="key">↓</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/tetris.js"></script>
+</body>
+</html>

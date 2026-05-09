@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Neon - Premium Arcade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/hub.css">
+    <link rel="stylesheet" href="../css/pacman.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header-controls">
+            <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Hub</a>
+            <div style="font-weight: 800; font-size: 1.2rem; letter-spacing: 0.1em; color: var(--pac-yellow);">PAC-MAN <span style="color: #fff;">NEON</span></div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-label">Pontuação</div>
+                <div id="score" class="stat-value">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Vidas</div>
+                <div id="lives" class="lives-container">
+                    <div class="life-icon"></div>
+                    <div class="life-icon"></div>
+                    <div class="life-icon"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-wrapper">
+            <canvas id="gameCanvas" width="448" height="496"></canvas>
+            
+            <div id="startScreen" class="overlay">
+                <h1>PAC-MAN</h1>
+                <p style="margin-bottom: 2rem; color: #a1a1aa;">Use as setas para mover</p>
+                <button id="startBtn" class="primary-btn">Iniciar Arcade</button>
+            </div>
+
+            <div id="gameOverScreen" class="overlay hidden">
+                <h1 style="color: #ff4444;">GAME OVER</h1>
+                <p style="margin-bottom: 2rem; color: #a1a1aa;">Pontuação Final: <span id="finalScore" style="color: #fff; font-weight: 800;">0</span></p>
+                <button id="restartBtn" class="primary-btn">Tentar Novamente</button>
+            </div>
+
+            <div id="winScreen" class="overlay hidden">
+                <h1 style="color: #44ff44;">VOCÊ VENCEU!</h1>
+                <p style="margin-bottom: 2rem; color: #a1a1aa;">Limpou o labirinto!</p>
+                <button id="nextLevelBtn" class="primary-btn">Próximo Nível</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/pacman.js"></script>
+</body>
+</html>

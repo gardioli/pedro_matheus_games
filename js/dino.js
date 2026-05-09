@@ -67,6 +67,7 @@ resize();
 // Controles
 const keys = {};
 window.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape') startGame();
     keys[e.code] = true;
     if (e.code === 'ArrowDown' && gameActive) {
         dino.isCrouching = true;
@@ -242,8 +243,11 @@ function update() {
 
     // Pontuação baseada em frames (mais fluida)
     frameCount++;
-    // Aceleração progressiva baseada na pontuação
-    speed += 0.002 + (score / 15000);
+    // Aceleração progressiva baseada na pontuação (menos agressiva)
+    if (frameCount % 60 === 0) {
+        speed += 0.1;
+    }
+    
     if (frameCount % 6 === 0) {
         score++;
         updateScore();

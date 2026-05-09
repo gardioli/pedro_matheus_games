@@ -48,6 +48,9 @@ const player = {
     onGround: true,
     speed: 5,
     jumpForce: -16,
+    getHitbox: function() {
+        return { x: this.x, y: this.y - this.h, w: this.w, h: this.h };
+    }
 };
 
 // ---- Boss (no canto direito)
@@ -63,6 +66,7 @@ let projectiles = [];
 // ---- Keys
 const keys = {};
 window.addEventListener('keydown', e => {
+    if (e.code === 'Escape') startGame();
     keys[e.code] = true;
     // Previne scroll da página
     if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) {
@@ -169,7 +173,8 @@ function update(ts) {
         const m = minions[i];
         m.x += m.vx;
         // Colisão minion -> jogador = game over
-        if (rectsOverlap(player, { x: m.x, y: m.y - m.h, w: m.w, h: m.h })) {
+        const minionHitbox = { x: m.x, y: m.y - m.h, w: m.w, h: m.h };
+        if (rectsOverlap(player.getHitbox(), minionHitbox)) {
             state = 'dead';
             return;
         }

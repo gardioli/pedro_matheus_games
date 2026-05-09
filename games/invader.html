@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Invader - Premium Arcade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/hub.css">
+    <link rel="stylesheet" href="../css/invader.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header-controls">
+            <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Hub</a>
+            <div style="font-weight: 800; font-size: 1.5rem; letter-spacing: 0.2em; color: var(--invader-green);">RETRO <span style="color: #fff;">INVADER</span></div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-label">Score</div>
+                <div id="score" class="stat-value">0000</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Vidas</div>
+                <div id="lives" class="stat-value">3</div>
+            </div>
+        </div>
+
+        <div class="game-wrapper">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            
+            <div id="startScreen" class="overlay">
+                <h1>READY?</h1>
+                <p style="margin-bottom: 2rem; color: #94a3b8;">Setas para mover | Espaço para atirar</p>
+                <button id="startBtn" class="primary-btn">Iniciar Missão</button>
+            </div>
+
+            <div id="gameOverScreen" class="overlay hidden">
+                <h1 style="color: var(--danger-red);">MISSION FAILED</h1>
+                <p style="margin-bottom: 2rem; color: #94a3b8;">Score Final: <span id="finalScore" style="color: #fff; font-weight: 800;">0</span></p>
+                <button id="restartBtn" class="primary-btn">Tentar Novamente</button>
+            </div>
+
+            <div id="winScreen" class="overlay hidden">
+                <h1 style="color: var(--invader-green);">MISSION SUCCESS</h1>
+                <p style="margin-bottom: 2rem; color: #94a3b8;">Área Limpa!</p>
+                <button id="nextLevelBtn" class="primary-btn">Próxima Onda</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/invader.js"></script>
+</body>
+</html>
